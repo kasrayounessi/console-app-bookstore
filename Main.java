@@ -18,6 +18,7 @@ public class Main {
         String username;
         String password;
         List<String> credentials;
+        List<Book> bookstoPurchase;
 
 
         for(int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
@@ -76,34 +77,54 @@ public class Main {
 
         }
 
-        //while(menuFlag){
+        while(menuFlag) {
             System.out.println("Welcome!");
-            for(int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
+            for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
             System.out.println();
-            List<String> categories =  bookDao.listCategories();
+            List<String> categories = bookDao.listCategories();
             System.out.println("Genres: ");
-            for(int i = 0; i < categories.size(); i++){
+            for (int i = 0; i < categories.size(); i++) {
                 System.out.println(categories.get(i));
             }
             System.out.println("type the genres to view its books");
             String category = scanner.next();
-            if(!(bookDao.categoryExists(category))){
+            if (!(bookDao.categoryExists(category))) {
                 System.out.println("the category you selected does not exist");
                 return;
             }
             List<String> bookTitle = bookDao.retrieveThisCategoryBooks(category);
             System.out.println("There are " + bookTitle.size() + " in the " + category + " section");
-            for(String b:bookTitle){
+            for (String b : bookTitle) {
                 System.out.println(b);
             }
             System.out.print("Type the name of the book: ");
-            String bookName = scanner.next();
-            if(!(bookDao.bookExists(bookName))){
+            String bookName = scanner.next() + " " + scanner.next();
+
+            if (!(bookDao.bookExists(bookName))) {
                 System.out.println("the category you selected does not exist");
                 return;
             }
             Book retrievedBook = bookDao.retrieveBook(bookName);
-            System.out.println(retrievedBook);
+
+            System.out.println(retrievedBook.getTitle());
+            System.out.println("Category: " + retrievedBook.getCategory());
+            System.out.println("Author: " + retrievedBook.getAuthor());
+            System.out.println("Price: " + retrievedBook.getPrice());
+            System.out.println("Do you wish to buy this book?");
+            System.out.println("Enter 1  to buy");
+            System.out.println("Enter 2 to return");
+            switch (scanner.next()) {
+                case "1":
+                    System.out.println("Buying...");
+                    break;
+                case "2":
+                    System.out.println("Returning...");
+                    break;
+                default:
+                    System.out.println("Enter a valid number");
+            }
+        }
+            
 
 
 
