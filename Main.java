@@ -22,7 +22,7 @@ public class Main {
         String password;
         List<String> credentials;
         List<Book> booksToPurchase = new ArrayList<>();
-        double totalPrice = 0;
+
 
         while(firstFlag) {
             for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
@@ -78,9 +78,9 @@ public class Main {
                         menuFlag = true;
 
                     } else {
-                        System.out.println("This username already exists! Exiting...");
+                        System.out.println("This username already exists! Returning to the main menu.");
                         menuFlag = false;
-                        return;
+                        //return;
                     }
                     break;
                 case "q":
@@ -94,95 +94,158 @@ public class Main {
             }
 
             for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
-            //System.out.println("Welcome!");
             while (menuFlag) {
 
                 for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
                 System.out.println();
                 System.out.println("Enter 1 to surf the bookstore");
                 System.out.println("Enter 2 to go to your shopping cart");
-                System.out.println("Enter 3 to exit ");
+                System.out.println("Enter 3 to return");
                 for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
                 System.out.println();
                 switch (scanner.next()) {
                     case "1":
                         List<String> categories = bookDao.listCategories();
-                        for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
-                        System.out.println("Genres: ");
-                        for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
-                        System.out.println();
-                        for (int i = 0; i < categories.size(); i++) {
-                            System.out.println(categories.get(i));
+                        boolean genreFlag = true;
+                        boolean continueWithGenre = true;
+                        String category = null;
+                        while(genreFlag){
+                            for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
+                            System.out.println("Genres: ");
+                            for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
+                            System.out.println();
+                            for (int i = 0; i < categories.size(); i++) {
+                                System.out.println(categories.get(i));
+                            }
+                            for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
+                            System.out.println();
+                            System.out.println("type your desired genre to view its books");
+                            System.out.println("type 'q' to return");
+                            for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
+                            System.out.println();
+                            category = scanner.next();
+                            if(category.equals("q")) {
+                                genreFlag = false;
+                                continueWithGenre = false;
+                                for(int i = 1; i <= SPACECOUNTER;i++) System.out.println();
+                            }
+                            else if (!(bookDao.categoryExists(category))) {
+                                System.out.println("the category you selected does not exist");
+                            } else{
+                                genreFlag = false;
+                            }
                         }
-                        for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
-                        System.out.println();
-                        System.out.println("type the genres to view its books");
-                        for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
-                        System.out.println();
-                        String category = scanner.next();
-                        if (!(bookDao.categoryExists(category))) {
-                            System.out.println("the category you selected does not exist");
-                            return;
-                        }
-                        List<String> bookTitle = bookDao.retrieveThisCategoryBooks(category);
-                        for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
+                        if(continueWithGenre){
+                            List<String> bookTitle = bookDao.retrieveThisCategoryBooks(category);
+                            for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
+                            boolean bookFlag = true;
+                            boolean continueWithBook = true;
+                            Book retrievedBook = null;
 
-                        if (bookTitle.size() == 1)
-                            System.out.println("There is " + bookTitle.size() + " book in the " + category + " section");
-                        else
-                            System.out.println("There are " + bookTitle.size() + " books in the " + category + " section");
+                            while(bookFlag){
+                                for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
+                                System.out.println();
+                                if (bookTitle.size() == 1)
+                                    System.out.println("There is " + bookTitle.size() + " book in the " + category + " section");
+                                else
+                                    System.out.println("There are " + bookTitle.size() + " books in the " + category + " section");
+                                for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
+                                System.out.println();
 
-                        for (String b : bookTitle) {
-                            System.out.println(b);
-                        }
-                        System.out.print("Type the name of the book: ");
-                        String bookName = scanner.next() + " " + scanner.next();
+                                for (String b : bookTitle) {
+                                    System.out.println(b);
+                                }
 
-                        if (!(bookDao.bookExists(bookName))) {
-                            System.out.println("the category you selected does not exist");
-                            return;
-                        }
-                        Book retrievedBook = bookDao.retrieveBook(bookName);
+                                for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
+                                System.out.println();
+                                System.out.println("Type the name of the book: ");
+                                for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
+                                System.out.println();
+                                String bookName = scanner.next();
+                                if(bookName.equals("q")){
+                                    continueWithBook = false;
+                                    bookFlag = false;
+                                } else{
+                                    bookName = bookName + " " + scanner.next();
+                                    if(!(bookDao.bookExists(bookName, category))){
+                                        System.out.println("the book you selected does not exist");
+                                    } else{
+                                        retrievedBook = bookDao.retrieveBook(bookName);
+                                        bookFlag = false;
+                                    }
 
-                        System.out.println(retrievedBook.getTitle());
-                        System.out.println("Category: " + retrievedBook.getCategory());
-                        System.out.println("Author: " + retrievedBook.getAuthor());
-                        System.out.println("Price: " + retrievedBook.getPrice());
-                        System.out.println("Do you wish to buy this book?");
-                        System.out.println("Enter 1  to buy");
-                        System.out.println("Enter 2 to return");
-                        switch (scanner.next()) {
-                            case "1":
-                                System.out.println("Added to the cart");
-                                booksToPurchase.add(retrievedBook);
-                                break;
-                            case "2":
-                                break;
-                            default:
-                                System.out.println("Enter a valid number");
+                                }
+                                for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
+
+                            }
+
+                            if(continueWithBook){
+                                for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
+                                for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
+                                System.out.println();
+                                System.out.println(retrievedBook.getTitle());
+                                for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
+                                System.out.println();
+                                System.out.println("Category: " + retrievedBook.getCategory());
+                                System.out.println("Author: " + retrievedBook.getAuthor());
+                                System.out.println("Price: $" + retrievedBook.getPrice());
+                                for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
+                                System.out.println();
+                                System.out.println("Do you wish to buy this book?");
+                                System.out.println("Enter 1  to buy");
+                                System.out.println("Enter 2 to return");
+                                for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
+                                System.out.println();
+                                switch (scanner.next()) {
+                                    case "1":
+                                        for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
+                                        System.out.println("Added to the cart");
+                                        booksToPurchase.add(retrievedBook);
+                                        break;
+                                    case "2":
+                                        for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
+                                        break;
+                                    default:
+                                        System.out.println("Enter a valid number");
+                                }
+                            }
                         }
                         break;
                     case "2":
+                        double totalPrice = 0;
+
                         if (booksToPurchase.isEmpty()) {
                             System.out.println("You do not have any books in your cart.");
+                            for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
                             break;
                         }
+                        for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
+                        for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
+                        System.out.println();
+
 
                         for (Book book : booksToPurchase) {
                             System.out.println(book.getTitle() + "               price: $" + book.getPrice());
+                            for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
+                            System.out.println();
                             totalPrice += book.getPrice();
                         }
                         double taxAmount = totalPrice * TAX_PERCENTAGE;
                         System.out.println("Tax: $" + taxAmount);
                         System.out.println("Total: $" + (totalPrice + taxAmount));
+                        for (int i = 1; i <= STARCOUNTER; i++) System.out.print("-");
+                        System.out.println();
                         System.out.println("Press any button to check out");
                         System.out.println("Press 'q' to return");
+                        for (int i = 1; i <= STARCOUNTER; i++) System.out.print("*");
+                        System.out.println();
                         switch (scanner.next()) {
                             case "q":
+                                for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
                                 break;
                             default:
                                 System.out.println("Checking out...");
-                                menuFlag = false;
+                                for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
                                 break;
                         }
 
@@ -204,10 +267,11 @@ public class Main {
         }
 
 
-            
+
 
 
 
 
     }
 }
+

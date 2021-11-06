@@ -60,8 +60,8 @@ public class BookDaoImpl implements BookDao{
     }
 
     @Override
-    public boolean bookExists(String bookTitle) throws SQLException {
-        String sql = "select * from books where title = '" + bookTitle +"' LIMIT 1";
+    public boolean bookExists(String bookTitle, String category) throws SQLException {
+        String sql = "select * from books where title = '" + bookTitle +"' AND category = '"+category+"' LIMIT 1";
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         if(resultSet.next()) {

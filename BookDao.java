@@ -8,7 +8,7 @@ public interface BookDao {
     List<String> listCategories() throws SQLException;
     boolean categoryExists(String category) throws SQLException;
     List<String> retrieveThisCategoryBooks(String category) throws SQLException;
-    boolean bookExists(String bookTitle) throws SQLException;
+    boolean bookExists(String bookTitle, String category) throws SQLException;
     Book retrieveBook(String bookTitle) throws SQLException;
 
 }
