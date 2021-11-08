@@ -245,6 +245,7 @@ public class Main {
                                 break;
                             default:
                                 System.out.println("Checking out...");
+                                booksToPurchase.clear();
                                 for (int i = 1; i <= SPACECOUNTER; i++) System.out.println();
                                 break;
                         }
@@ -252,6 +253,7 @@ public class Main {
                         break;
                     case "3":
                         System.out.println("Returning to main menu");
+                        booksToPurchase.clear();
                         for(int i = 1; i <= SPACECOUNTER; i++) System.out.println();
 
                         menuFlag = false;
